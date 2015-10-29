@@ -1,0 +1,16 @@
+{
+  "name": "patentlyclear",
+  "version": "1.7.0",
+  "description": "Node library for the patentlyclear api",
+  "main": "index.js",
+  "scripts": {
+    "version": "docco -l linear client.js && git add -A docs"
+  },
+  "repository": "",
+  "author": "kiernan",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.65.0",
+    "underscore": "^1.8.3"
+  }
+}

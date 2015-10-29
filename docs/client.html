@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>client.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="public/stylesheets/normalize.css" />
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="page">
+
+      <div class="header">
+        
+          <h1>client.js</h1>
+        
+
+        
+      </div>
+
+      
+        
+        <p>client.js
+wrapper for api calls to PatentlyClear</p>
+
+        
+          <div class='highlight'><pre><span class="hljs-keyword">var</span> request = <span class="hljs-built_in">require</span>(<span class="hljs-string">'request'</span>);
+<span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'underscore'</span>);
+<span class="hljs-keyword">var</span> url = <span class="hljs-built_in">require</span>(<span class="hljs-string">'url'</span>);
+<span class="hljs-keyword">var</span> pck = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./package.json'</span>);
+
+<span class="hljs-keyword">var</span> apiHost = <span class="hljs-string">'api.patentlyclear.com'</span>;</pre></div>
+        
+      
+        
+        <p><strong>api([api_token = process.env.PC_API_TOKEN])</strong>
+Require-ing this module will return a function that takes your PatentlyClear api token.
+If no token is passed then the library will attempt to use process.env.PC_API_TOKEN (on the server only).
+Simply call this function with your token to access the api functions.</p>
+<p> <code>var api = new require(&#39;patentlyclear&#39;)(&#39;my api token&#39;)</code>
+ <code>var api = new require(&#39;patentlyclear&#39;)() // uses process.env.PC_API_TOKEN</code></p>
+
+        
+          <div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">contructor</span>(<span class="hljs-params">api_token</span>) </span>{
+
+  <span class="hljs-keyword">if</span> (!api_token &amp;&amp; process &amp;&amp; process.env &amp;&amp; process.env.PC_API_TOKEN) {
+    api_token = process.env.PC_API_TOKEN;
+  }
+
+  <span class="hljs-keyword">if</span> (!api_token) {
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'No api_token provided'</span>);
+  }</pre></div>
+        
+      
+        
+        <p><strong>getById(id, callback)</strong>
+Looks up a document by its id
+Supplying an id that points to multiple resources (such as an application number)
+will return all forms of that document.</p>
+
+        
+      
+        
+        <p>Application ID</p>
+<ul>
+<li><code>api.getById(&#39;US20140000001&#39;) =&gt; {application: {...}}</code></li>
+</ul>
+
+        
+      
+        
+        <p>Grant ID</p>
+<ul>
+<li><code>api.getById(&#39;US8877876&#39;) =&gt; {grant: {...}}</code></li>
+</ul>
+
+        
+      
+        
+        <p>Application Number (both string and number formats are accepted)</p>
+<ul>
+<li><code>api.getById(&#39;13/538,394&#39;) =&gt; {application: {...}, grant: {...}}</code></li>
+<li><code>api.getById(13538394) =&gt; {application: {...}, grant: {...}}</code></li>
+</ul>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getById</span>(<span class="hljs-params">id, callback</span>) </span>{
+    <span class="hljs-keyword">var</span> formattedUrl = url.format({
+      protocol: <span class="hljs-string">'http'</span>,
+      host: apiHost,
+      pathname: id,
+      query: {
+        token: api_token
+      }
+    });
+    request({url: formattedUrl, json: <span class="hljs-literal">true</span>}, apiResponse(callback));
+  }
+  <span class="hljs-keyword">this</span>.getById = getById;</pre></div>
+        
+      
+        
+        <p><strong>search(payload, callback)</strong>
+Search for a set of documents with a query payload.</p>
+
+        
+      
+        
+        <p>There are several fields that can be searched on. They are:</p>
+<ul>
+<li>terms [string]: Perform a full text search with a set of keywords.</li>
+<li>inventor [string]: Search on inventor name.</li>
+<li>assignee [string]: Who owns the document.</li>
+<li>filing_date {before: Date, after: Date}: When the document was filed.</li>
+<li>publication_date {before: Date, after: Date}: When the document was published.</li>
+<li>type: [application || grant]: What sort of document it is.</li>
+<li>size int: Total number of documents to return. (Max = 100)</li>
+</ul>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">search</span>(<span class="hljs-params">payload, callback</span>) </span>{
+    <span class="hljs-keyword">var</span> formattedUrl = url.format({
+      protocol: <span class="hljs-string">'http'</span>,
+      host: apiHost,
+      pathname: <span class="hljs-string">'search'</span>,
+      query: {
+        token: api_token
+      }
+    });
+    request.post({url: formattedUrl, body: payload, json: <span class="hljs-literal">true</span>}, apiResponse(callback));
+  }
+  <span class="hljs-keyword">this</span>.search = search;</pre></div>
+        
+      
+        
+        <p><strong>analyze(field, payload, callback)</strong>
+Fetches the top trends in a field for a search payload.</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">analyze</span>(<span class="hljs-params">field, payload, callback</span>) </span>{
+    <span class="hljs-keyword">var</span> formattedUrl = url.format({
+      protocol: <span class="hljs-string">'http'</span>,
+      host: apiHost,
+      pathname: <span class="hljs-string">'analyze/'</span> + field,
+      query: {
+        token: api_token
+      }
+    });
+    request.post({url: formattedUrl, body: payload, json: <span class="hljs-literal">true</span>}, apiResponse(callback));
+  }
+  <span class="hljs-keyword">this</span>.analyze = analyze;</pre></div>
+        
+      
+        
+        <p><strong>backwardCitation(id, payload, callback)</strong>
+Fetches the backward citations of <code>id</code> (eg. the documents that <code>id</code> cites.) that match a given search query.
+Optionally provide a search payload to filter documents that are retrieved.</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">backwardCitation</span>(<span class="hljs-params">id, payload, callback</span>) </span>{
+    <span class="hljs-keyword">if</span> (!callback &amp;&amp; <span class="hljs-keyword">typeof</span> payload === <span class="hljs-string">'function'</span>) {
+      callback = payload;
+      payload = {};
+    }
+    <span class="hljs-keyword">var</span> formattedUrl = url.format({
+      protocol: <span class="hljs-string">'http'</span>,
+      host: apiHost,
+      pathname: <span class="hljs-string">'backward_citation/'</span> + id,
+      query: {
+        token: api_token
+      }
+    });
+    request.post({url: formattedUrl, body: payload, json: <span class="hljs-literal">true</span>}, apiResponse(callback));
+  }
+  <span class="hljs-keyword">this</span>.backwardCitation = backwardCitation;</pre></div>
+        
+      
+        
+        <p><strong>forwardCitation(id, payload, callback)</strong>
+Fetches the forward citations of <code>id</code>. (eg. the documents that cite <code>id</code>.)  that match a given search query.</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">forwardCitation</span>(<span class="hljs-params">id, payload, callback</span>) </span>{
+    <span class="hljs-keyword">if</span> (!callback &amp;&amp; <span class="hljs-keyword">typeof</span> payload === <span class="hljs-string">'function'</span>) {
+      callback = payload;
+      payload = {};
+    }
+    <span class="hljs-keyword">var</span> formattedUrl = url.format({
+      protocol: <span class="hljs-string">'http'</span>,
+      host: apiHost,
+      pathname: <span class="hljs-string">'forward_citation/'</span> + id,
+      query: {
+        token: api_token
+      }
+    });
+    request.post({url: formattedUrl, body: payload, json: <span class="hljs-literal">true</span>}, apiResponse(callback));
+  }
+  <span class="hljs-keyword">this</span>.forwardCitation = forwardCitation;</pre></div>
+        
+      
+        
+        <p><strong>figure(id, figure_index)</strong>
+Returns (does not callback!) a url that can be placed in an <code>&lt;img /&gt;</code> to display a figure from a patent.
+Note that <code>figure_index</code> starts at 1</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">figure</span>(<span class="hljs-params">id, figure_index</span>) </span>{
+    <span class="hljs-keyword">return</span> url.format({
+      protocol: <span class="hljs-string">'http'</span>,
+      host: apiHost,
+      pathname: <span class="hljs-string">'figure/'</span> + id + <span class="hljs-string">'/'</span> + figure_index,
+      query: {
+        token: api_token
+      }
+    });
+  }
+  <span class="hljs-keyword">this</span>.figure = figure;</pre></div>
+        
+      
+        
+        <p><strong>getVersion()</strong>
+Returns the version of this client</p>
+
+        
+          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getVersion</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> pck.version;
+  }
+  <span class="hljs-keyword">this</span>.getVersion = getVersion;
+
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">apiResponse</span>(<span class="hljs-params">callback</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, response, body</span>) </span>{
+    <span class="hljs-keyword">if</span> (err) {
+      <span class="hljs-keyword">return</span> callback(err);
+    }
+
+    <span class="hljs-keyword">if</span> (response.statusCode !== <span class="hljs-number">200</span>) {
+      <span class="hljs-keyword">return</span> callback(body);
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">if</span> (!_.isArray(body)) {
+        body = dateFormat(body);
+      } <span class="hljs-keyword">else</span> {
+        body = body.map(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">o</span>) </span>{
+          <span class="hljs-keyword">return</span> dateFormat(o);
+        });
+      }
+      <span class="hljs-keyword">return</span> callback(<span class="hljs-literal">null</span>, body);
+    }
+
+  };
+}
+<span class="hljs-built_in">module</span>.exports = contructor;
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dateFormat</span>(<span class="hljs-params">obj</span>) </span>{
+  <span class="hljs-keyword">if</span> (obj.application) {
+    obj.application.filing_date = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(obj.application.filing_date);
+    obj.application.publication_date = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(obj.application.publication_date);
+  }
+  <span class="hljs-keyword">if</span> (obj.grant) {
+    obj.grant.filing_date = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(obj.grant.filing_date);
+    obj.grant.publication_date = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(obj.grant.publication_date);
+  }
+  <span class="hljs-keyword">return</span> obj;
+}</pre></div>
+        
+      
+      <div class="fleur">h</div>
+    </div>
+  </div>
+</body>
+</html>
