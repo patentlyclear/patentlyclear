@@ -40,7 +40,7 @@ function contructor(api_token) {
   // * `api.getById(13538394) => {application: {...}, grant: {...}}`
   function getById(id, callback) {
     var formattedUrl = url.format({
-      protocol: 'http',
+      protocol: 'https',
       host: apiHost,
       pathname: id,
       query: {
@@ -64,7 +64,7 @@ function contructor(api_token) {
   // * size int: Total number of documents to return. (Max = 100)
   function search(payload, callback) {
     var formattedUrl = url.format({
-      protocol: 'http',
+      protocol: 'https',
       host: apiHost,
       pathname: 'search',
       query: {
@@ -79,7 +79,7 @@ function contructor(api_token) {
   // Fetches the top trends in a field for a search payload.
   function analyze(field, payload, callback) {
     var formattedUrl = url.format({
-      protocol: 'http',
+      protocol: 'https',
       host: apiHost,
       pathname: 'analyze/' + field,
       query: {
@@ -99,7 +99,7 @@ function contructor(api_token) {
       payload = {};
     }
     var formattedUrl = url.format({
-      protocol: 'http',
+      protocol: 'https',
       host: apiHost,
       pathname: 'backward_citation/' + id,
       query: {
@@ -118,7 +118,7 @@ function contructor(api_token) {
       payload = {};
     }
     var formattedUrl = url.format({
-      protocol: 'http',
+      protocol: 'https',
       host: apiHost,
       pathname: 'forward_citation/' + id,
       query: {
@@ -134,7 +134,7 @@ function contructor(api_token) {
   // Note that `figure_index` starts at 1
   function figure(id, figure_index) {
     return url.format({
-      protocol: 'http',
+      protocol: 'https',
       host: apiHost,
       pathname: 'figure/' + id + '/' + figure_index,
       query: {
