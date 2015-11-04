@@ -87,7 +87,7 @@ will return all forms of that document.</p>
         
           <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getById</span>(<span class="hljs-params">id, callback</span>) </span>{
     <span class="hljs-keyword">var</span> formattedUrl = url.format({
-      protocol: <span class="hljs-string">'http'</span>,
+      protocol: <span class="hljs-string">'https'</span>,
       host: apiHost,
       pathname: id,
       query: {
@@ -120,7 +120,7 @@ Search for a set of documents with a query payload.</p>
         
           <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">search</span>(<span class="hljs-params">payload, callback</span>) </span>{
     <span class="hljs-keyword">var</span> formattedUrl = url.format({
-      protocol: <span class="hljs-string">'http'</span>,
+      protocol: <span class="hljs-string">'https'</span>,
       host: apiHost,
       pathname: <span class="hljs-string">'search'</span>,
       query: {
@@ -139,7 +139,7 @@ Fetches the top trends in a field for a search payload.</p>
         
           <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">analyze</span>(<span class="hljs-params">field, payload, callback</span>) </span>{
     <span class="hljs-keyword">var</span> formattedUrl = url.format({
-      protocol: <span class="hljs-string">'http'</span>,
+      protocol: <span class="hljs-string">'https'</span>,
       host: apiHost,
       pathname: <span class="hljs-string">'analyze/'</span> + field,
       query: {
@@ -163,7 +163,7 @@ Optionally provide a search payload to filter documents that are retrieved.</p>
       payload = {};
     }
     <span class="hljs-keyword">var</span> formattedUrl = url.format({
-      protocol: <span class="hljs-string">'http'</span>,
+      protocol: <span class="hljs-string">'https'</span>,
       host: apiHost,
       pathname: <span class="hljs-string">'backward_citation/'</span> + id,
       query: {
@@ -186,7 +186,7 @@ Fetches the forward citations of <code>id</code>. (eg. the documents that cite <
       payload = {};
     }
     <span class="hljs-keyword">var</span> formattedUrl = url.format({
-      protocol: <span class="hljs-string">'http'</span>,
+      protocol: <span class="hljs-string">'https'</span>,
       host: apiHost,
       pathname: <span class="hljs-string">'forward_citation/'</span> + id,
       query: {
@@ -206,7 +206,7 @@ Note that <code>figure_index</code> starts at 1</p>
         
           <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">figure</span>(<span class="hljs-params">id, figure_index</span>) </span>{
     <span class="hljs-keyword">return</span> url.format({
-      protocol: <span class="hljs-string">'http'</span>,
+      protocol: <span class="hljs-string">'https'</span>,
       host: apiHost,
       pathname: <span class="hljs-string">'figure/'</span> + id + <span class="hljs-string">'/'</span> + figure_index,
       query: {

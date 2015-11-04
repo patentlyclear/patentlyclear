@@ -1,6 +1,6 @@
 {
   "name": "patentlyclear",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Node library for the patentlyclear api",
   "main": "index.js",
   "scripts": {
