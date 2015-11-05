@@ -129,21 +129,6 @@ function contructor(api_token) {
   }
   this.forwardCitation = forwardCitation;
 
-  // **figure(id, figure_index)**
-  // Returns (does not callback!) a url that can be placed in an `<img />` to display a figure from a patent.
-  // Note that `figure_index` starts at 1
-  function figure(id, figure_index) {
-    return url.format({
-      protocol: 'https',
-      host: apiHost,
-      pathname: 'figure/' + id + '/' + figure_index,
-      query: {
-        token: api_token
-      }
-    });
-  }
-  this.figure = figure;
-
   // **getVersion()**
   // Returns the version of this client
   function getVersion() {

@@ -142,17 +142,6 @@ pc.forwardCitation('US8046721', {terms: 'password'}, function(err, data) {
 });
 ```
 
-### Figures
-
-**figure(id, figure_index)**
-Returns (does not callback!) a url that can be placed in an `<img />` to display a figure from a patent.
-Note that `figure_index` starts at 1
-
-```js
-var url = pc.figure('US8046721', 1);
-```
-
-
 License
 ---
 
