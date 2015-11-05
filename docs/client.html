@@ -199,25 +199,6 @@ Fetches the forward citations of <code>id</code>. (eg. the documents that cite <
         
       
         
-        <p><strong>figure(id, figure_index)</strong>
-Returns (does not callback!) a url that can be placed in an <code>&lt;img /&gt;</code> to display a figure from a patent.
-Note that <code>figure_index</code> starts at 1</p>
-
-        
-          <div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">figure</span>(<span class="hljs-params">id, figure_index</span>) </span>{
-    <span class="hljs-keyword">return</span> url.format({
-      protocol: <span class="hljs-string">'https'</span>,
-      host: apiHost,
-      pathname: <span class="hljs-string">'figure/'</span> + id + <span class="hljs-string">'/'</span> + figure_index,
-      query: {
-        token: api_token
-      }
-    });
-  }
-  <span class="hljs-keyword">this</span>.figure = figure;</pre></div>
-        
-      
-        
         <p><strong>getVersion()</strong>
 Returns the version of this client</p>
 
